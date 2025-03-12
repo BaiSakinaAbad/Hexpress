@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class TSPSolver {
@@ -24,7 +25,8 @@ public class TSPSolver {
         permute(cityIndexes, 0, allRoutes);
 
         // Display all routes
-        System.out.println("All Possible Routes:");
+
+        System.out.println("\n\n"+ Arrays.toString(cities) + "\n\nAll Possible Routes:");
         for (ArrayList<Integer> route : allRoutes) {
             int totalDistance = calculateTotalDistance(route);
             System.out.print("Koriko City -> ");
