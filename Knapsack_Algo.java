@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Knapsack_Algo {
 
+    
     public static void findCombinations(int capacity) {
         Product[] products = Product.product;
         int n = products.length;
