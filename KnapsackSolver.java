@@ -58,7 +58,7 @@ public class KnapsackSolver {
     private void printCombinations(List<List<Product>> combinations) {
         System.out.println("-------------------------------------------------------------");
         System.out.println("\nPOSSIBLE COMBINATIONS\n");
-        System.out.printf("%-45s %-15s %-15s %-15s\n", "Product Names", "Total Quantity", "Total Weight", "Total Value");
+        System.out.printf("%-50s %-15s %-15s %-15s\n", "Product Names", "Total Quantity", "Total Weight", "Total Value");
         System.out.println("-------------------------------------------------------------");
 
         Set<String> printedCombinations = new HashSet<>();
@@ -79,7 +79,7 @@ public class KnapsackSolver {
             String combinationKey = String.join(", ", productNames);
             if (!printedCombinations.contains(combinationKey)) {
                 printedCombinations.add(combinationKey);
-                System.out.printf("%-45s %-15d %-15d %-15d\n", combinationKey, totalQuantity, totalWeight, totalValue);
+                System.out.printf("%-50s %-15d %-15d %-15d\n", combinationKey, totalQuantity, totalWeight, totalValue);
             }
         }
     }
