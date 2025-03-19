@@ -11,29 +11,29 @@ public class TSPSolver {
             {10, 20, 17, 15, 0} // Hotel Adriano
     };
 
-    private static final String[] cities = {"Koriko City", "Emishi Village", "Kingsbury", "Howl's Castle", "Hotel Adriano"};
-    private ArrayList<ArrayList<Integer>> shortestPaths = new ArrayList<>();
-    private int minDistance = Integer.MAX_VALUE;
+    static final String[] cities = {"Koriko City", "Emishi Village", "Kingsbury", "Howl's Castle", "Hotel Adriano"};
+
+    ArrayList<ArrayList<Integer>> shortestPaths = new ArrayList<>();
+    ArrayList<ArrayList<Integer>> allRoutes = new ArrayList<>();
+    int minDistance = Integer.MAX_VALUE;
 
     public void findShortestRoute() {
         ArrayList<Integer> cityIndexes = new ArrayList<>();
         for (int i = 1; i < cities.length; i++) {
-            cityIndexes.add(i); // Exclude Koriko City (starting point)
+            cityIndexes.add(i);
         }
 
-        ArrayList<ArrayList<Integer>> allRoutes = new ArrayList<>();
-        permute(cityIndexes, 0, allRoutes);
+        permute(cityIndexes, 0);
 
         // Display all routes
-
-        System.out.println("\n\n"+ Arrays.toString(cities) + "\n\nAll Possible Routes:");
+        System.out.println("\n\n" + Arrays.toString(cities) + "\n\nAll Possible Routes:");
         for (ArrayList<Integer> route : allRoutes) {
             int totalDistance = calculateTotalDistance(route);
             System.out.print("Koriko City -> ");
             for (int city : route) {
                 System.out.print(cities[city] + " -> ");
             }
-            System.out.print("Koriko City | Distance: " + totalDistance + " km");
+            System.out.print("Koriko City | \tDistance: " + "\t" + totalDistance + " km");
 
             if (totalDistance == minDistance) {
                 System.out.println("  <-- Shortest Route ✅");
@@ -49,12 +49,12 @@ public class TSPSolver {
             for (int city : shortestPath) {
                 System.out.print(cities[city] + " -> ");
             }
-            System.out.println("Koriko City | Distance: " + minDistance + " km");
+            System.out.println("Koriko City | \tDistance: " + "\t" + minDistance + " km");
         }
     }
 
-    private void permute(ArrayList<Integer> arr, int l, ArrayList<ArrayList<Integer>> allRoutes) {
-        if (l == arr.size()) {
+    private void permute(ArrayList<Integer> arr, int len) {
+        if (len == arr.size()) {
             ArrayList<Integer> newRoute = new ArrayList<>(arr);
             allRoutes.add(newRoute);
             int currentDistance = calculateTotalDistance(newRoute);
@@ -67,17 +67,17 @@ public class TSPSolver {
                 shortestPaths.add(new ArrayList<>(newRoute));
             }
         } else {
-            for (int i = l; i < arr.size(); i++) {
-                Collections.swap(arr, i, l);
-                permute(arr, l + 1, allRoutes);
-                Collections.swap(arr, i, l); // Backtrack
+            for (int i = len; i < arr.size(); i++) {
+                Collections.swap(arr, i, len);
+                permute(arr, len + 1);
+                Collections.swap(arr, i, len); // Backtrack
             }
         }
     }
 
-    private int calculateTotalDistance(ArrayList<Integer> route) {
+    public int calculateTotalDistance(ArrayList<Integer> route) {
         int total = 0;
-        int prevCity = 0; // Starting from Koriko City
+        int prevCity = 0;
         for (int city : route) {
             total += distanceMatrix[prevCity][city];
             prevCity = city;
