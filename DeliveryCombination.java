@@ -1,4 +1,3 @@
-package hexpress_algorithm;
 
 import java.util.*;
 
@@ -45,6 +44,11 @@ public class DeliveryCombination {
         System.out.println("Total Weight: " + bestCombo.totalWeight + "kg");
         System.out.println("Total Value: " + bestCombo.totalValue);
         System.out.println("------------------------------------------------------");
+    }
+
+    // Peek the next combination without removing it
+    public Combination peekCombination() {
+        return deliveryQueue.peek();
     }
 
     // Inner class for Combination
