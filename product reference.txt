@@ -1,0 +1,11 @@
+cus_name	   quantity	prod_name	location	prod_weight	prod_value	
+Madam Sulliman 		2	Apple Pie	Kingsbury		3	 180	
+Madam Gina		1	Flower Vase	Hotel Adriano		2	 150
+King			1	Music Box	Kingsbury		3	 300
+Porco Rosso		1	Big stuff toy	Hotel Adriano		7	 700
+Ashitaka 		15	Arrows		Emishi Village		7.5	 1500
+Howl			3	Books		Howl's Castle		5	 225
+San			5	Magic Amulet	Emishi Village		4	 2500
+Kocho			6	Tea Pot		Kingsbury		9	 3445
+
+	
