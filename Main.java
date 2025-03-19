@@ -5,14 +5,14 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int maxWeight;
 
-        do {
-            System.out.print("Enter the maximum weight capacity (1-15 kg): ");
+         do {
+            System.out.print("Enter the maximum weight capacity (8-15 kg): ");
             while (!scanner.hasNextInt()) {
-                System.out.println("Invalid input. Please enter a number between 1 and 15.");
+                System.out.println("Invalid input. Please enter a number between 8 and 15.");
                 scanner.next();
             }
             maxWeight = scanner.nextInt();
-        } while (maxWeight < 1 || maxWeight > 15);
+        } while (maxWeight < 8 || maxWeight > 15);
 
         scanner.close();
 
