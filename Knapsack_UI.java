@@ -96,8 +96,8 @@ public class Knapsack_UI {
         Knapsack_Algorithm.KnapsackResult result = Knapsack_Algorithm.getAllPossibleOutcomes(maxWeight);
         populateTableFromResult(result.combinationsTable, tableModel);
 
-        // Back Button (consistent style)
-        JButton backButton = new JButton("Back to Product List") {
+        // ✅ Proceed Button (opens DeliveryCombination_UI)
+        JButton proceedButton = new JButton("Proceed to Delivery Batches") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -109,18 +109,19 @@ public class Knapsack_UI {
             }
         };
 
-        backButton.setFont(new Font("Comic Sans MS", Font.BOLD, 26));
-        backButton.setForeground(Color.BLACK);
-        backButton.setBounds(450, 570, 300, 60);
-        backButton.setContentAreaFilled(false);
-        backButton.setFocusPainted(false);
-        backButton.setBorder(BorderFactory.createEmptyBorder());
-        backButton.setOpaque(false);
-        knapsackPanel.add(backButton);
+        proceedButton.setFont(new Font("Comic Sans MS", Font.BOLD, 26));
+        proceedButton.setForeground(Color.BLACK);
+        proceedButton.setBounds(450, 570, 300, 60);
+        proceedButton.setContentAreaFilled(false);
+        proceedButton.setFocusPainted(false);
+        proceedButton.setBorder(BorderFactory.createEmptyBorder());
+        proceedButton.setOpaque(false);
+        knapsackPanel.add(proceedButton);
 
-        backButton.addActionListener(e -> {
-            frame.dispose();
-            SwingUtilities.invokeLater(Product_UI::new);
+        // ✅ Proceed button action: Dispose Knapsack_UI and open DeliveryCombination_UI
+        proceedButton.addActionListener(e -> {
+            frame.dispose(); // Close Knapsack_UI window
+            SwingUtilities.invokeLater(DeliveryCombination_UI::new); // Open DeliveryCombination_UI window
         });
 
         frame.setContentPane(backgroundPanel);
@@ -150,5 +151,10 @@ public class Knapsack_UI {
                 System.err.println("Skipping invalid row: " + rowString);
             }
         }
+    }
+
+    // Optional main for testing Knapsack_UI directly
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Knapsack_UI(50)); // Example maxWeight
     }
 }
