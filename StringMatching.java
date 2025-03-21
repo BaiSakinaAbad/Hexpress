@@ -1,26 +1,32 @@
 
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.LinkedList;
 
 public class StringMatching {
-    private HashMap<String, String[]> customerData;
+    private HashMap<String, LinkedList<Product>> customerProducts;
 
     public StringMatching() {
-        customerData = new HashMap<>();
+        customerProducts = new HashMap<>();
         initializeData();
     }
 
+    public LinkedList<String> getAllCustomerNames() {
+        return new LinkedList<>(customerProducts.keySet());
+    }
+
     private void initializeData() {
-        customerData.put("tombo", new String[]{"Koriko City", "Big stuffed toy", "7kg", "711"});
-        customerData.put("howl", new String[]{"Howl's Castle", "Books", "4kg", "469"});
-        customerData.put("ashitaka", new String[]{"Emishi Village", "Arrows", "6kg", "600"});
-        customerData.put("madame sulliman", new String[]{"Kingsbury", "Apple pie", "3kg", "350"});
-        customerData.put("madame gina", new String[]{"Hotel Adriano", "Flower Vase", "5kg", "555"});
+        for (Product p : Product.product) {
+            customerProducts.computeIfAbsent(p.customer_name.toLowerCase(), k -> new LinkedList<>()).add(p);
+        }
+    }
+
+    public LinkedList<Product> getCustomerProducts(String customerName) {
+        return customerProducts.getOrDefault(customerName.toLowerCase(), new LinkedList<>());
     }
 
     public void displayCustomers() {
         System.out.println("\nAvailable Customers:");
-        customerData.keySet().stream()
+        customerProducts.keySet().stream()
                 .sorted()
                 .map(StringMatching::capitalize)
                 .forEach(name -> System.out.println(" - " + name));
@@ -28,16 +34,20 @@ public class StringMatching {
 
     public void findCustomer(String customerName) {
         customerName = customerName.trim().toLowerCase();
-        if (customerData.containsKey(customerName)) {
-            String[] details = customerData.get(customerName);
+        if (customerProducts.containsKey(customerName)) {
+            LinkedList<Product> products = customerProducts.get(customerName);
             System.out.println("\nCustomer Details:");
-            System.out.println("Customer: " + capitalize(customerName));
-            System.out.println("Location: " + details[0]);
-            System.out.println("Product: " + details[1]);
-            System.out.println("Weight: " + details[2]);
-            System.out.println("Value: " + details[3]);
+            for (Product product : products) {
+                System.out.println("Customer Name: " + product.customer_name);
+                System.out.println("Location: " + product.location);
+                System.out.println("Quantity: " + product.quantity);
+                System.out.println("Product: " + product.product_Name);
+                System.out.println("Weight: " + product.product_Weight + "kg");
+                System.out.println("Value: " + product.product_Value);
+                System.out.println();
+            }
         } else {
-            System.out.println("\nCustomer doesn't exist. Please try again.\n");
+            System.out.println("\nCustomer not found. Please ensure the name is spelled correctly or try using the full name.\n" + "Please Try Again.");
         }
     }
 
@@ -50,18 +60,5 @@ public class StringMatching {
                     .append(" ");
         }
         return capitalized.toString().trim();
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        StringMatching stringMatching = new StringMatching();
-
-        stringMatching.displayCustomers();
-
-        while (true) {
-            System.out.print("\nEnter a customer name: ");
-            String customerName = scanner.nextLine();
-            stringMatching.findCustomer(customerName);
-        }
     }
 }
