@@ -1,4 +1,3 @@
-package hexpress_algorithm;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -24,7 +23,7 @@ public class Product_UI {
         frame.setIconImage(icon.getImage());
 
         // Background image
-        ImageIcon backgroundIcon = new ImageIcon("kiki sky.jpg");
+        ImageIcon backgroundIcon = new ImageIcon("C:\\Users\\Sakina Abad\\IdeaProjects\\HEXPRESS2.0\\src\\clouds.gif");
 
         // Custom background panel
         JPanel backgroundPanel = new JPanel() {
@@ -127,7 +126,7 @@ public class Product_UI {
                 System.out.println("Max weight from Bag_UI: " + maxWeight);
 
                 // Call Knapsack_Algorithm if needed
-                Knapsack_Algorithm.KnapsackResult result = Knapsack_Algorithm.findCombinations(maxWeight);
+                KnapsackSolver.KnapsackResult result = KnapsackSolver.findCombinations(maxWeight);
 
                 // Open Knapsack_UI (showing all possible combinations)
                 SwingUtilities.invokeLater(() -> new Knapsack_UI(maxWeight));
@@ -218,6 +217,8 @@ public class Product_UI {
 
         return data;
     }
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Product_UI::new);
