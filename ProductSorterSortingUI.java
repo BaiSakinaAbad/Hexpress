@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,25 +18,20 @@ public class ProductSorterSortingUI {
     }
 
     private void initializeGUI() {
-        // Frame Setup
         frame = new JFrame("Kiki's Sorted Batches");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Background Panel
         JPanel backgroundPanel = createBackgroundPanel();
         frame.setContentPane(backgroundPanel);
 
-        // Main Panel
         JPanel sortingPanel = createMainPanel();
         backgroundPanel.add(sortingPanel);
 
-        // Components
         setupTable(sortingPanel);
         setupOutputArea(sortingPanel);
         setupButtons(sortingPanel);
 
-        // Initial Table Population
         populateTableWithBatches(batches);
 
         frame.setVisible(true);
@@ -80,7 +73,7 @@ public class ProductSorterSortingUI {
     }
 
     private void setupTable(JPanel panel) {
-        String[] columnNames = {"Batch #", "Product Names", "Qty", "Weight", "Value"};
+        String[] columnNames = {"Batch", "Product Names", "Qty", "Weight", "Value"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -102,11 +95,11 @@ public class ProductSorterSortingUI {
             @Override
             public void doLayout() {
                 TableColumnModel cm = getColumnModel();
-                cm.getColumn(0).setPreferredWidth(80);   // Batch #
-                cm.getColumn(1).setPreferredWidth(300);  // Product Names
-                cm.getColumn(2).setPreferredWidth(90);   // Total Qty
-                cm.getColumn(3).setPreferredWidth(90);   // Total Weight
-                cm.getColumn(4).setPreferredWidth(90);   // Total Value
+                cm.getColumn(0).setPreferredWidth(80);
+                cm.getColumn(1).setPreferredWidth(300);
+                cm.getColumn(2).setPreferredWidth(90);
+                cm.getColumn(3).setPreferredWidth(90);
+                cm.getColumn(4).setPreferredWidth(90);
                 super.doLayout();
             }
         };
@@ -137,7 +130,7 @@ public class ProductSorterSortingUI {
     private void setupOutputArea(JPanel panel) {
         outputArea = new JTextArea();
         outputArea.setEditable(false);
-        outputArea.setFont(new Font("Serif", Font.PLAIN, 18));
+        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         outputArea.setForeground(new Color(105, 3, 3));
         outputArea.setBackground(new Color(245, 222, 179, 230));
         outputArea.setLineWrap(true);
@@ -154,7 +147,7 @@ public class ProductSorterSortingUI {
         JButton sortQtyButton = createButton("QUANTITY", new Color(150, 200, 220), 270, 570, 200, 60);
         JButton sortWeightButton = createButton("WEIGHT", new Color(150, 200, 220), 490, 570, 200, 60);
         JButton sortValueButton = createButton("VALUE", new Color(150, 200, 220), 710, 570, 200, 60);
-        JButton invoiceButton = createButton("DELIVERY INVOICE", new Color(200, 150, 200), 930, 570, 200, 60);
+        JButton searchButton = createButton("SEARCH CUSTOMER", new Color(200, 150, 200), 930, 570, 200, 60);
         JButton backButton = createButton("BACK", new Color(180, 180, 180), 1150, 570, 90, 60);
         JButton exitButton = createButton("EXIT", new Color(255, 100, 100), 1260, 570, 90, 60);
 
@@ -162,15 +155,52 @@ public class ProductSorterSortingUI {
         panel.add(sortQtyButton);
         panel.add(sortWeightButton);
         panel.add(sortValueButton);
-        panel.add(invoiceButton);
+        panel.add(searchButton);
         panel.add(backButton);
         panel.add(exitButton);
 
-        sortNameButton.addActionListener(e -> sortAndDisplayByName());
-        sortQtyButton.addActionListener(e -> sortAndDisplayByQuantity());
-        sortWeightButton.addActionListener(e -> sortAndDisplayByWeight());
-        sortValueButton.addActionListener(e -> sortAndDisplayByValue());
-        invoiceButton.addActionListener(e -> showInvoice());
+        sortNameButton.addActionListener(e -> {
+            ProductSorter.sortByProductName(batches);
+            populateTableWithBatches(batches);
+            displaySortedBatches("Product Name (Alphabetically)", batches);
+        });
+
+        sortQtyButton.addActionListener(e -> {
+            ProductSorter.sortByTotalQuantity(batches);
+            populateTableWithBatches(batches);
+            displaySortedBatches("Total Quantity", batches);
+        });
+
+        sortWeightButton.addActionListener(e -> {
+            ProductSorter.sortByTotalWeight(batches);
+            populateTableWithBatches(batches);
+            displaySortedBatches("Total Weight", batches);
+        });
+
+        sortValueButton.addActionListener(e -> {
+            ProductSorter.sortByTotalValue(batches);
+            populateTableWithBatches(batches);
+            displaySortedBatches("Total Value", batches);
+        });
+
+        // Updated to use existing StringMatching class
+        searchButton.addActionListener(e -> {
+            // Create a new frame for StringMatchingGUI
+            JFrame searchFrame = new JFrame("Customer Search");
+            searchFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            searchFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            searchFrame.setIconImage(loadImage("kikilogo.png", "Icon"));
+
+            // Initialize StringMatchingGUI with the new frame
+            StringMatchingGUI stringMatchingGUI = new StringMatchingGUI(searchFrame);
+
+            // Set visible after initialization
+            searchFrame.setVisible(true);
+
+            // Update output area to indicate redirection
+            outputArea.setText("Redirected to customer search interface.");
+        });
+
         backButton.addActionListener(e -> goBack());
         exitButton.addActionListener(e -> System.exit(0));
     }
@@ -223,12 +253,16 @@ public class ProductSorterSortingUI {
 
     private void displaySortedBatches(String sortType, List<List<Product>> sortedBatches) {
         StringBuilder sb = new StringBuilder();
-        sb.append("✨ KIKI'S MAGICAL DELIVERY MANIFEST ✨\n");
-        sb.append("📬 Sorted by: " + sortType + " 📬\n");
-        sb.append("🌟===✈️===🌟===✈️===🌟===✈️===🌟\n");
+
+        sb.append("╔════════════════════════════════════╗\n");
+        sb.append("║   KIKI'S MAGICAL DELIVERY MANIFEST  ║\n");
+        sb.append("╚════════════════════════════════════╝\n");
+        sb.append(String.format(" Sorted by: %-26s \n", sortType));
+        sb.append("──────────────────────────────────────\n");
 
         if (sortedBatches == null || sortedBatches.isEmpty()) {
-            sb.append("🚫 No packages to deliver today! Time for a catnap! 😺\n");
+            sb.append(" No packages to deliver today!      \n");
+            sb.append(" Time for a catnap! 😺              \n");
             outputArea.setText(sb.toString());
             return;
         }
@@ -239,12 +273,13 @@ public class ProductSorterSortingUI {
         for (List<Product> batch : sortedBatches) {
             if (batch == null || batch.isEmpty()) continue;
 
-            sb.append("\n📦 Delivery Batch #" + batchNumber + " 🚚\n");
-            sb.append("🌈--- Magical Cargo Details ---🌈\n");
+            sb.append(String.format("\n Delivery Batch #%d\n", batchNumber));
+            sb.append(" ┌──────────────────────────────┐\n");
+            sb.append(" │      Magical Cargo Details   │\n");
+            sb.append(" └──────────────────────────────┘\n");
 
             int totalWeight = 0, totalValue = 0, totalQty = 0;
 
-            // Delivery items with a fun checklist vibe
             for (Product p : batch) {
                 totalWeight += p.product_Weight;
                 totalValue += p.product_Value;
@@ -253,68 +288,31 @@ public class ProductSorterSortingUI {
                 grandTotalWeight += p.product_Weight;
                 grandTotalValue += p.product_Value;
 
-                sb.append(String.format("✨ %-20s 🚀 Qty: %-3d | Weight: %-3d kg | Value: %-5d\n",
+                sb.append(String.format(" %-20s │ Qty: %3d │ Wt: %3d kg │ Val: %4d\n",
                         p.product_Name, p.quantity, p.product_Weight, p.product_Value));
             }
 
-            // Batch summary with a sprinkle of magic
-            sb.append("🌟--- Batch Summary ---🌟\n");
-            sb.append(String.format("  🎁 Total Items:  %-3d\n", totalQty));
-            sb.append(String.format("  ⚖️ Total Weight: %-3d kg %s\n", totalWeight,
-                    totalWeight > maxWeight ? "⚠️ Overloaded!" : ""));
-            sb.append(String.format("  💰 Total Value:  %-5d\n", totalValue));
-            sb.append("🌈--- End of Batch #" + batchNumber + " ---🌈\n");
+            sb.append(" ──────────────────────────────\n");
+            sb.append(" Batch Summary:\n");
+            sb.append(String.format("   Total Items:  %4d\n", totalQty));
+            sb.append(String.format("   Total Weight: %4d kg%s\n", totalWeight,
+                    totalWeight > maxWeight ? " (Overloaded!)" : ""));
+            sb.append(String.format("   Total Value:  %5d\n", totalValue));
+            sb.append(" ──────────────────────────────\n");
             batchNumber++;
         }
 
-        // Grand totals for the delivery day
-        sb.append("\n🎉 GRAND DELIVERY TOTALS 🎉\n");
-        sb.append("🌟===✈️===🌟===✈️===🌟===✈️===🌟\n");
-        sb.append(String.format("  📦 Total Items Delivered: %-4d\n", grandTotalItems));
-        sb.append(String.format("  ⚖️ Total Weight Shipped: %-4d kg\n", grandTotalWeight));
-        sb.append(String.format("  💰 Total Value Sent:     %-5d\n", grandTotalValue));
-        sb.append("🌟===✈️===🌟 Happy Shipping! 🌟===✈️===🌟\n");
+        sb.append("\n╔════════════════════════════════════╗\n");
+        sb.append("║        GRAND DELIVERY TOTALS       ║\n");
+        sb.append("╚════════════════════════════════════╝\n");
+        sb.append(String.format(" Total Items Delivered: %5d\n", grandTotalItems));
+        sb.append(String.format(" Total Weight Shipped:  %5d kg\n", grandTotalWeight));
+        sb.append(String.format(" Total Value Sent:      %5d\n", grandTotalValue));
+        sb.append("──────────────────────────────────────\n");
+        sb.append(" Happy Shipping! ✈️\n");
 
         outputArea.setText(sb.toString());
-    }
-
-    private void sortAndDisplayByName() {
-        List<List<Product>> sortedBatches = new java.util.ArrayList<>(batches);
-        Collections.sort(sortedBatches, (b1, b2) -> b1.get(0).product_Name.compareToIgnoreCase(b2.get(0).product_Name));
-        populateTableWithBatches(sortedBatches);
-        displaySortedBatches("Product Names", sortedBatches);
-    }
-
-    private void sortAndDisplayByQuantity() {
-        List<List<Product>> sortedBatches = new java.util.ArrayList<>(batches);
-        Collections.sort(sortedBatches, Comparator.comparingInt(b -> b.stream().mapToInt(p -> p.quantity).sum()));
-        populateTableWithBatches(sortedBatches);
-        displaySortedBatches("Total Quantity", sortedBatches);
-    }
-
-    private void sortAndDisplayByWeight() {
-        List<List<Product>> sortedBatches = new java.util.ArrayList<>(batches);
-        Collections.sort(sortedBatches, Comparator.comparingInt(b -> b.stream().mapToInt(p -> p.product_Weight).sum()));
-        populateTableWithBatches(sortedBatches);
-        displaySortedBatches("Total Weight", sortedBatches);
-    }
-
-    private void sortAndDisplayByValue() {
-        List<List<Product>> sortedBatches = new java.util.ArrayList<>(batches);
-        sortedBatches.sort((b1, b2) -> Integer.compare(
-                b2.stream().mapToInt(p -> p.product_Value).sum(),
-                b1.stream().mapToInt(p -> p.product_Value).sum()));
-        populateTableWithBatches(sortedBatches);
-        displaySortedBatches("Total Value", sortedBatches);
-    }
-
-    private void showInvoice() {
-        JFrame invoiceFrame = new JFrame("Check Delivery Invoice");
-        invoiceFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        invoiceFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        new StringMatchingGUI(invoiceFrame); // Assuming StringMatchingGUI exists
-        invoiceFrame.setVisible(true);
-        outputArea.setText("Opened Delivery Invoice window.");
+        outputArea.setCaretPosition(0);
     }
 
     private void goBack() {
@@ -347,11 +345,5 @@ public class ProductSorterSortingUI {
             textArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             return textArea;
         }
-    }
-
-    public static void main(String[] args) {
-        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(50);
-        List<List<Product>> batches = knapsack.knapsackBatchSelection();
-        SwingUtilities.invokeLater(() -> new ProductSorterSortingUI(batches, 50));
     }
 }
