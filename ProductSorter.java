@@ -1,5 +1,4 @@
-package hexpress_algorithm;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -7,118 +6,141 @@ import java.util.Scanner;
 
 public class ProductSorter {
 
-    // ✅ Main method to prompt user and sort/display combinations
-    public static void askUserAndSortCombinations(List<Object[]> combinations) {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        boolean exit = false;
 
-        while (!exit) {
-            // ✅ User menu
-            System.out.println("\n\nHow would you like to sort the combinations?");
-            System.out.println("1 - Sort by Product Names (Alphabetical Order)");
-            System.out.println("2 - Sort by Total Weight (Ascending)");
-            System.out.println("3 - Sort by Total Value (Ascending)");
-            System.out.println("4 - Exit\n");
-            
-            System.out.print("Enter your choice (1, 2, 3, or 4): ");
+        // Set max weight
+        System.out.print("Enter the maximum weight limit for batches: ");
+        int maxWeight = scanner.nextInt();
+
+        // Display all possible combinations before batch sorting
+        System.out.println("\nALL POSSIBLE COMBINATIONS BEFORE SORTING:\n");
+        Knapsack_Algorithm.KnapsackResult possibleCombinations = Knapsack_Algorithm.getAllPossibleOutcomes(maxWeight);
+        for (String row : possibleCombinations.combinationsTable) {
+            System.out.println(row);
+        }
+
+        // Generate and display batches
+        System.out.println("\nGENERATING BATCHES:\n");
+        Knapsack_Algorithm.findAndDeliverBatches(maxWeight);
+
+        // Create batches for sorting
+        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
+        List<List<Product>> batches = knapsack.knapsackBatchSelection();
+
+        // Initialize customer search
+        StringMatching stringMatching = new StringMatching();
+
+        // Display sorting and customer search menu
+        sortAndSearchMenu(batches, scanner, stringMatching);
+
+        scanner.close();
+    }
+
+    public static void sortAndSearchMenu(List<List<Product>> batches, Scanner scanner, StringMatching stringMatching) {
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\nChoose an Option:");
+            System.out.println("1. Sort by Product Name (Alphabetically)");
+            System.out.println("2. Sort by Total Quantity");
+            System.out.println("3. Sort by Total Weight");
+            System.out.println("4. Sort by Total Value");
+            System.out.println("5. Search for Customer Invoice");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
 
-            // ✅ Perform sorting based on choice
             switch (choice) {
                 case 1:
-                    System.out.println("\nSorted Combinations by Product Names (Alphabetical Order):");
-                    sortByProductNames(combinations);
-                    displayCombinations(combinations);
+                    sortByProductName(batches);
+                    displayBatches(batches);
                     break;
                 case 2:
-                    System.out.println("\nSorted Combinations by Total Weight (Ascending):");
-                    sortByTotalWeight(combinations);
-                    displayCombinations(combinations);
+                    sortByTotalQuantity(batches);
+                    displayBatches(batches);
                     break;
                 case 3:
-                    System.out.println("\nSorted Combinations by Total Value (Ascending):");
-                    sortByTotalValue(combinations);
-                    displayCombinations(combinations);
+                    sortByTotalWeight(batches);
+                    displayBatches(batches);
                     break;
                 case 4:
-                    exit = true; // Set exit to true to break the loop
-                    exitClass exitObj = new exitClass(); // Create an instance of exitClass
-                    exitObj.printExit(); // Call the printExit method
-                    exitObj.printCongratulations(); // Call the printCongratulations method
-                    break; // Exit the switch
+                    sortByTotalValue(batches);
+                    displayBatches(batches);
+                    break;
+                case 5:
+                    // Customer Search
+                    System.out.print("\nEnter Customer Name: ");
+                    String customerName = scanner.nextLine();
+                    stringMatching.findCustomer(customerName);
+                    break;
+                case 6:
+                    System.out.println("\nExiting program.");
+                    running = false;
+                    break;
                 default:
-                    System.out.println("\nInvalid choice. Please select 1 (Names), 2 (Weight), 3 (Value), or 4 (Exit).");
-                    break; // Continue to the next iteration of the loop
+                    System.out.println("\nInvalid choice. Please try again.");
             }
         }
-
-        scanner.close(); // Close the scanner when done
     }
 
-    // ✅ Sort combinations by Product Names (Alphabetically)
-    private static void sortByProductNames(List<Object[]> combinations) {
-        Collections.sort(combinations, new Comparator<Object[]>() {
-        	
-            @Override
-            public int compare(Object[] combo1, Object[] combo2) {
-                
-            @SuppressWarnings("unchecked")
-				List<Product> list = (List<Product>) combo1[0];
-				List<Product> products1 = list;
-				
-            @SuppressWarnings("unchecked")
-				List<Product> products2 = (List<Product>) combo2[0];
-
-                // Sort the product lists alphabetically
-                Collections.sort(products1, Comparator.comparing(p -> p.product_Name));
-                Collections.sort(products2, Comparator.comparing(p -> p.product_Name));
-
-                // Compare the first product names after sorting
-                String name1 = products1.isEmpty() ? "" : products1.get(0).product_Name;
-                String name2 = products2.isEmpty() ? "" : products2.get(0).product_Name;
-
-                return name1.compareTo(name2);
-            }
+    public static void sortByProductName(List<List<Product>> batches) {
+        Collections.sort(batches, (batch1, batch2) -> {
+            String name1 = batch1.get(0).product_Name;
+            String name2 = batch2.get(0).product_Name;
+            return name1.compareToIgnoreCase(name2);
         });
+        System.out.println("\nBatches sorted by Product Name (Alphabetically).");
     }
 
-    // ✅ Sort combinations by Total Weight (Ascending)
-    private static void sortByTotalWeight(List<Object[]> combinations) {
-        Collections.sort(combinations, Comparator.comparingInt(combo -> (Integer) combo[1]));
+    public static void sortByTotalQuantity(List<List<Product>> batches) {
+        Collections.sort(batches, Comparator.comparingInt(batch ->
+                batch.stream().mapToInt(p -> p.quantity).sum()));
+        System.out.println("\nBatches sorted by Total Quantity.");
     }
 
-    // ✅ Sort combinations by Total Value (Ascending)
-    private static void sortByTotalValue(List<Object[]> combinations) {
-        Collections.sort(combinations, Comparator.comparingInt(combo -> (Integer) combo[2]));
+    public static void sortByTotalWeight(List<List<Product>> batches) {
+        Collections.sort(batches, Comparator.comparingInt(batch ->
+                batch.stream().mapToInt(p -> p.product_Weight).sum()));
+        System.out.println("\nBatches sorted by Total Weight.");
     }
 
-    // ✅ Display all combinations in table format
-    private static void displayCombinations(List<Object[]> combinations) {
-        System.out.printf("\n%-40s %-15s %-15s\n", "Products", "Total Weight", "Total Value");
-        System.out.println("----------------------------------------------------------------------------------------");
+    public static void sortByTotalValue(List<List<Product>> batches) {
+        batches.sort((batch1, batch2) -> {
+            int value1 = batch1.stream().mapToInt(p -> p.product_Value).sum();
+            int value2 = batch2.stream().mapToInt(p -> p.product_Value).sum();
+            return Integer.compare(value2, value1); // Sort by descending value
+        });
+        System.out.println("\nBatches sorted by Total Value.");
+    }
 
-        for (Object[] combo : combinations) {
-            @SuppressWarnings("unchecked")
-			List<Product> list = (List<Product>) combo[0];
-			List<Product> products = list;
-            int totalWeight = (Integer) combo[1];
-            int totalValue = (Integer) combo[2];
+    public static void displayBatches(List<List<Product>> batches) {
+        System.out.println("\n--------------------------------------");
+        System.out.println("           Sorted Batches");
+        System.out.println("--------------------------------------");
 
-            String productNames = formatProductNames(products);
-            System.out.printf("%-40s %-15s %-15s\n", productNames, totalWeight + "kg", totalValue);
+        int batchNumber = 1;
+
+        for (List<Product> batch : batches) {
+            System.out.println("\nBatch " + batchNumber);
+            int totalWeight = 0, totalValue = 0, totalQuantity = 0;
+
+            for (Product p : batch) {
+                totalWeight += p.product_Weight;
+                totalValue += p.product_Value;
+                totalQuantity += p.quantity;
+
+                System.out.printf(" - %-20s | Qty: %-4d | Weight: %-4d kg | Value: %-4d\n",
+                        p.product_Name, p.quantity, p.product_Weight, p.product_Value);
+            }
+
+            System.out.println("------------------------------------------------");
+            System.out.printf("Total Quantity: %-5d | Total Weight: %-5d kg | Total Value: %-5d\n",
+                    totalQuantity, totalWeight, totalValue);
+
+            batchNumber++;
         }
-    }
-
-    // ✅ Helper to format product names into a readable string
-    private static String formatProductNames(List<Product> products) {
-        if (products.isEmpty()) return "None";
-
-        StringBuilder names = new StringBuilder();
-        for (Product p : products) {
-            names.append(p.product_Name).append(", ");
-        }
-        names.setLength(names.length() - 2); // Remove last comma and space
-        return names.toString();
     }
 }
