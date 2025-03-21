@@ -121,10 +121,32 @@ public class StringMatchingGUI {
                     }
                 }
             }
-        });
+        });	
 
         frame.add(backgroundLabel);
-    }
+
+    
+    // Add an image at the lower-right corner
+    ImageIcon kittyIcon = new ImageIcon("C:/Users/DELL/OneDrive/Documents/DAA/DAA midterm Proj/Pictures/CatUi.png");
+    Image kitty = kittyIcon.getImage().getScaledInstance(500, 350, Image.SCALE_SMOOTH);
+    JLabel kittyLabel = new JLabel(new ImageIcon(kitty));
+    kittyLabel.setBounds(screenWidth - 500, screenHeight - 390, 500, 500); // Positioning the image
+    frame.add(kittyLabel);
+
+    // Add the background last to ensure it's behind everything
+    frame.add(backgroundLabel);
+    
+    // Add an image at the lower-right corner
+    ImageIcon imageIcon = new ImageIcon("C://Users//DELL//OneDrive//Documents//DAA//DAA midterm Proj//Pictures//DesignUI.png/");
+    Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+    JLabel imageLabel = new JLabel(new ImageIcon(image));
+    imageLabel.setBounds(screenWidth - 1665, screenHeight - 885, 900, 900); // Positioning the image
+    frame.add(imageLabel);
+
+    // Add the background last to ensure it's behind everything
+    frame.add(backgroundLabel);
+}
+
 
     private static String capitalize(String str) {
         String[] words = str.split(" ");
