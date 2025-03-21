@@ -1,4 +1,4 @@
-package hexpress_algorithm;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +9,8 @@ public class Bag_UI {
     private JFrame frame;
     private int maxWeight;
     private Consumer<Integer> onWeightConfirmed;
+    private ImageIcon backgroundGif;
+
 
     // ✅ Constructor accepts a callback for when weight is entered
     public Bag_UI(Consumer<Integer> onWeightConfirmed) {
@@ -30,7 +32,7 @@ public class Bag_UI {
         frame.setLocationRelativeTo(null);
 
         // ✅ Background ImageIcon (optional)
-        ImageIcon backgroundIcon = new ImageIcon("kiki sky.jpg");
+        ImageIcon backgroundIcon = new ImageIcon("C:\\Users\\Sakina Abad\\IdeaProjects\\HEXPRESS2.0\\src\\clouds.gif");
 
         // ✅ Custom panel to paint background
         JPanel backgroundPanel = new JPanel() {
