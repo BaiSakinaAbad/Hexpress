@@ -10,8 +10,5 @@ public class exitClass {
             System.out.println("\t\t" + pName);
         }
     }
-    public void printCongratulations() {
-        System.out.println("\nAll deliveries are completed! 🎉");
-        System.out.println("Great job on helping Kiki today!\n");
-    }
+  
 }
