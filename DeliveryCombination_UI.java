@@ -9,12 +9,11 @@ public class DeliveryCombination_UI {
     private JFrame frame;
     private JTextArea outputArea;
     private DeliveryCombination deliveryCombination;
-    private List<List<Product>> allBatches; // Store batches
-    private List<String> allBatchLocations; // Store locations for each batch
+    private List<List<Product>> allBatches;
+    private List<String> allBatchLocations;
     private int maxWeight;
     private JButton proceedToMapButton;
     private ImageIcon backgroundGif;
-
 
     public DeliveryCombination_UI() {
         initializeUI();
@@ -95,12 +94,25 @@ public class DeliveryCombination_UI {
 
         findDeliverButton.addActionListener((ActionEvent e) -> {
             try {
-                maxWeight = Integer.parseInt(weightField.getText().trim());
+                int inputWeight = Integer.parseInt(weightField.getText().trim());
+                if (inputWeight < 9 || inputWeight > 15) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Please enter a weight between 9 and 15 kg.",
+                            "Invalid Weight",
+                            JOptionPane.WARNING_MESSAGE);
+                    weightField.setText("");
+                    return;
+                }
+                maxWeight = inputWeight;
                 outputArea.setText("");
                 findAndDisplayBatches(maxWeight);
                 deliverNextButton.setEnabled(true);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame, "Please enter a valid max weight.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame,
+                        "Please enter a valid max weight.",
+                        "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
+                weightField.setText("");
             }
         });
 
@@ -146,8 +158,8 @@ public class DeliveryCombination_UI {
 
     private void findAndDisplayBatches(int maxWeight) {
         KnapsackSolver knapsack = new KnapsackSolver(maxWeight);
-        allBatches = knapsack.knapsackBatchSelection(); // Store batches
-        allBatchLocations = new ArrayList<>(); // Initialize list to store locations
+        allBatches = knapsack.knapsackBatchSelection();
+        allBatchLocations = new ArrayList<>();
         System.out.println("Total batches from KnapsackSolver: " + allBatches.size());
 
         deliveryCombination = new DeliveryCombination();
@@ -177,7 +189,7 @@ public class DeliveryCombination_UI {
             }
 
             String deliveryLocation = String.join(", ", batchLocations);
-            allBatchLocations.add(deliveryLocation); // Store the locations for this batch
+            allBatchLocations.add(deliveryLocation);
             System.out.println("Batch " + batchNumber + " - Combined locations: " + deliveryLocation);
 
             deliveryCombination.addCombination(batch, totalWeight, totalValue, deliveryLocation);
@@ -218,14 +230,13 @@ public class DeliveryCombination_UI {
             productNames.setLength(productNames.length() - 2);
         }
 
-        // Calculate the total distance using TSPSolver
         int totalDistance = TSPSolver.runTSP(java.util.Arrays.asList(bestCombo.location.split(", ")));
 
         outputArea.append("\nDelivered to: " + bestCombo.location + "\n");
         outputArea.append("Products: " + productNames.toString() + "\n");
         outputArea.append("Total Weight: " + bestCombo.totalWeight + " kg\n");
         outputArea.append("Total Value: " + bestCombo.totalValue + "\n");
-        outputArea.append("Total Distance: " + totalDistance + " km\n"); // Display the total distance
+        outputArea.append("Total Distance: " + totalDistance + " km\n");
         outputArea.append("------------------------------------------------------\n");
 
         if (deliveryCombination.isEmpty()) {
@@ -236,7 +247,7 @@ public class DeliveryCombination_UI {
     }
 
     private void openMapPage() {
-        new MapUI(deliveryCombination, allBatchLocations); // Pass both deliveryCombination and allBatchLocations
+        new MapUI(deliveryCombination, allBatchLocations);
         frame.dispose();
     }
 
