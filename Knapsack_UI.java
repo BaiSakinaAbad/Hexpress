@@ -1,4 +1,3 @@
-package hexpress_algorithm;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -12,6 +11,8 @@ public class Knapsack_UI {
     public Knapsack_UI(int maxWeight) {
         initializeGUI(maxWeight);
     }
+    private ImageIcon backgroundGif;
+
 
     private void initializeGUI(int maxWeight) {
         frame = new JFrame();
@@ -19,12 +20,13 @@ public class Knapsack_UI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+
         // Icon
         ImageIcon icon = new ImageIcon("kikilogo.png");
         frame.setIconImage(icon.getImage());
 
         // Background image
-        ImageIcon backgroundIcon = new ImageIcon("kiki sky.jpg");
+        ImageIcon backgroundIcon = new ImageIcon("C:\\Users\\Sakina Abad\\IdeaProjects\\HEXPRESS2.0\\src\\clouds.gif");
 
         JPanel backgroundPanel = new JPanel() {
             Image backgroundImage = backgroundIcon.getImage();
@@ -93,7 +95,7 @@ public class Knapsack_UI {
         knapsackPanel.add(scrollPane);
 
         // ✅ Load data from Knapsack_Algorithm
-        Knapsack_Algorithm.KnapsackResult result = Knapsack_Algorithm.getAllPossibleOutcomes(maxWeight);
+        KnapsackSolver.KnapsackResult result = KnapsackSolver.getAllPossibleOutcomes(maxWeight);
         populateTableFromResult(result.combinationsTable, tableModel);
 
         // ✅ Proceed Button (opens DeliveryCombination_UI)
