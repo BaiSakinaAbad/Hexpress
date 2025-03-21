@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSorterBatchUI {
-
     private JFrame frame;
     private int maxWeight;
-    private List<List<List<Product>>> allBatchSets; // Store multiple batch sets
-    private int currentBatchSetIndex; // Track current batch set
+    private List<List<List<Product>>> allBatchSets;
+    private int currentBatchSetIndex;
     private DefaultTableModel tableModel;
 
     public ProductSorterBatchUI(int maxWeight) {
@@ -20,48 +19,29 @@ public class ProductSorterBatchUI {
     }
 
     private void initializeGUI() {
-        // Initialize JFrame
         frame = new JFrame("Kiki's Delivery Batches");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Icon (optional)
-        ImageIcon icon;
-        try {
-            icon = new ImageIcon("kikilogo.png");
-        } catch (Exception e) {
-            System.err.println("Icon image not found: " + e.getMessage());
-            icon = new ImageIcon();
-        }
+        ImageIcon icon = new ImageIcon("kikilogo.png");
         frame.setIconImage(icon.getImage());
 
-        // Background image
-        final ImageIcon backgroundIcon;
-        ImageIcon icon1;
-        try {
-            icon1 = new ImageIcon("C:\\Users\\DELL\\eclipse-workspace\\HEXPRESS\\src\\clouds.gif", "Background");
-        } catch (Exception e) {
-            System.err.println("Background image not found: " + e.getMessage());
-            icon1 = new ImageIcon();
-        }
-
-        backgroundIcon = icon1;
-        JPanel backgroundPanel = new JPanel() {
-            Image backgroundImage = backgroundIcon.getImage();
+        JPanel backgroundPanel = new JPanel(null) {
+            Image backgroundImage = new ImageIcon("C:\\Users\\DELL\\eclipse-workspace\\HEXPRESS\\src\\clouds.gif").getImage();
 
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
             }
         };
-        backgroundPanel.setLayout(null);
 
-        // Semi-transparent brown panel
         JPanel batchPanel = new JPanel(null);
         batchPanel.setBackground(new Color(245, 222, 179, 230));
 
-        int panelWidth = 1400, panelHeight = 700; // Increased panel width for longer table
+        int panelWidth = 1400, panelHeight = 700;
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width - panelWidth) / 2;
         int y = (screen.height - panelHeight) / 2;
@@ -69,23 +49,17 @@ public class ProductSorterBatchUI {
         batchPanel.setBounds(x, y, panelWidth, panelHeight);
         backgroundPanel.add(batchPanel);
 
-        // Title Label
         JLabel title = new JLabel("KIKI NEEDS TO SORT HER DELIVERY BATCHES!", JLabel.CENTER);
         title.setFont(new Font("Serif", Font.BOLD | Font.ITALIC, 36));
         title.setForeground(new Color(104, 2, 2));
-        title.setBounds(50, 20, 1300, 50); // Adjusted for wider panel
+        title.setBounds(50, 20, 1300, 50);
         batchPanel.add(title);
 
-        // Column Names for the batches table
-        String[] columnNames = {
-                "Batch", "Product Name", "Quantity", "Weight", "Value" // Adjusted column names
-        };
-
-        // Table setup
+        String[] columnNames = {"Batch", "Product Name", "Quantity", "Weight", "Value"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false;
             }
         };
 
@@ -93,16 +67,15 @@ public class ProductSorterBatchUI {
             @Override
             public void doLayout() {
                 TableColumnModel cm = getColumnModel();
-                cm.getColumn(0).setPreferredWidth(100);  // Batch #
-                cm.getColumn(1).setPreferredWidth(700);  // Product Name (increased for longer display)
-                cm.getColumn(2).setPreferredWidth(150);  // Quantity
-                cm.getColumn(3).setPreferredWidth(150);  // Weight
-                cm.getColumn(4).setPreferredWidth(150);  // Value
+                cm.getColumn(0).setPreferredWidth(100);
+                cm.getColumn(1).setPreferredWidth(700);
+                cm.getColumn(2).setPreferredWidth(150);
+                cm.getColumn(3).setPreferredWidth(150);
+                cm.getColumn(4).setPreferredWidth(150);
                 super.doLayout();
             }
         };
 
-        // Custom renderer for Product Name column with text wrapping
         table.getColumnModel().getColumn(1).setCellRenderer(new TableCellRenderer() {
             private JTextArea textArea = new JTextArea();
 
@@ -112,7 +85,7 @@ public class ProductSorterBatchUI {
                 textArea.setText(value != null ? value.toString() : "");
                 textArea.setWrapStyleWord(true);
                 textArea.setLineWrap(true);
-                textArea.setFont(new Font("Serif", Font.BOLD, 20)); // Keeping original font
+                textArea.setFont(new Font("Serif", Font.BOLD, 20));
                 textArea.setForeground(new Color(105, 3, 3));
                 textArea.setBackground(new Color(245, 222, 179, 230));
                 if (isSelected) {
@@ -123,20 +96,17 @@ public class ProductSorterBatchUI {
             }
         });
 
-        // Table appearance customization
-        table.setFont(new Font("Serif", Font.BOLD, 20)); // Keeping original font
+        table.setFont(new Font("Serif", Font.BOLD, 20));
         table.setForeground(new Color(105, 3, 3));
-        table.setRowHeight(60); // Increased for wrapped text
+        table.setRowHeight(60);
         table.setBackground(new Color(245, 222, 179, 230));
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Allow horizontal scrolling
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        // Header customization
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
         header.setForeground(Color.BLACK);
         header.setBackground(new Color(200, 180, 150));
 
-        // Center alignment for numeric columns
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -149,26 +119,19 @@ public class ProductSorterBatchUI {
         table.setBorder(BorderFactory.createLineBorder(new Color(104, 2, 2), 3));
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(50, 100, 1300, 450); // Increased width for longer table
+        scrollPane.setBounds(50, 100, 1300, 450);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(104, 2, 2), 5));
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         batchPanel.add(scrollPane);
 
-        // Generate multiple batch sets
-        try {
-            generateBatchSets();
-            if (allBatchSets.isEmpty() || allBatchSets.get(0).isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "No batches generated.");
-            } else {
-                populateTableWithBatches(allBatchSets.get(currentBatchSetIndex));
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame, "Error generating batches: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+        generateBatchSets();
+        if (allBatchSets.isEmpty() || allBatchSets.get(0).isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No batches generated.");
+        } else {
+            populateTableWithBatches(allBatchSets.get(currentBatchSetIndex));
         }
 
-        // Next Button (Centered)
         JButton nextButton = new JButton("NEXT") {
             @Override
             protected void paintComponent(Graphics g) {
@@ -182,14 +145,13 @@ public class ProductSorterBatchUI {
         };
         nextButton.setFont(new Font("Comic Sans MS", Font.BOLD, 26));
         nextButton.setForeground(Color.BLACK);
-        nextButton.setBounds(550, 570, 300, 60); // Centered in the panel (1400 width)
+        nextButton.setBounds(550, 570, 300, 60);
         nextButton.setContentAreaFilled(false);
         nextButton.setFocusPainted(false);
         nextButton.setBorder(BorderFactory.createEmptyBorder());
         nextButton.setOpaque(false);
-        batchPanel.add(nextButton);
 
-        // Proceed Button (Lower Right)
+
         JButton proceedButton = new JButton("PROCEED") {
             @Override
             protected void paintComponent(Graphics g) {
@@ -203,14 +165,13 @@ public class ProductSorterBatchUI {
         };
         proceedButton.setFont(new Font("Comic Sans MS", Font.BOLD, 26));
         proceedButton.setForeground(Color.BLACK);
-        proceedButton.setBounds(1050, 570, 300, 60); // Lower right (panelWidth - 350)
+        proceedButton.setBounds(1050, 570, 300, 60);
         proceedButton.setContentAreaFilled(false);
         proceedButton.setFocusPainted(false);
         proceedButton.setBorder(BorderFactory.createEmptyBorder());
         proceedButton.setOpaque(false);
         batchPanel.add(proceedButton);
 
-        // Next button action: Show next batch set
         nextButton.addActionListener(e -> {
             if (!allBatchSets.isEmpty()) {
                 currentBatchSetIndex = (currentBatchSetIndex + 1) % allBatchSets.size();
@@ -218,7 +179,6 @@ public class ProductSorterBatchUI {
             }
         });
 
-        // Proceed button action: Open next UI with current batch set
         proceedButton.addActionListener(e -> {
             frame.dispose();
             List<List<Product>> currentBatches = allBatchSets.isEmpty() ? new ArrayList<>() : allBatchSets.get(currentBatchSetIndex);
@@ -230,13 +190,9 @@ public class ProductSorterBatchUI {
     }
 
     private void generateBatchSets() {
-        // Generate multiple batch sets (e.g., 3 different runs) without sorting
-        for (int i = 0; i < 3; i++) {
-            Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
-            List<List<Product>> batches = knapsack.knapsackBatchSelection();
-            // No sorting here to keep the original generated order
-            allBatchSets.add(batches);
-        }
+        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
+        List<List<Product>> batches = knapsack.knapsackBatchSelection();
+        allBatchSets.add(batches);
     }
 
     private void populateTableWithBatches(List<List<Product>> batches) {
@@ -247,14 +203,11 @@ public class ProductSorterBatchUI {
         }
 
         int batchNumber = 1;
-
         for (List<Product> batch : batches) {
             if (batch == null || batch.isEmpty()) continue;
 
-            // Add each product in the batch as a separate row
             for (Product product : batch) {
                 if (product == null || product.product_Name == null) continue;
-
                 tableModel.addRow(new Object[] {
                         batchNumber,
                         product.product_Name,
@@ -265,9 +218,5 @@ public class ProductSorterBatchUI {
             }
             batchNumber++;
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ProductSorterBatchUI(50));
     }
 }
