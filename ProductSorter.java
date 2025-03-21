@@ -1,41 +1,9 @@
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 public class ProductSorter {
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        // Set max weight
-        System.out.print("Enter the maximum weight limit for batches: ");
-        int maxWeight = scanner.nextInt();
-
-        // Display all possible combinations before batch sorting
-        System.out.println("\nALL POSSIBLE COMBINATIONS BEFORE SORTING:\n");
-        Knapsack_Algorithm.KnapsackResult possibleCombinations = Knapsack_Algorithm.getAllPossibleOutcomes(maxWeight);
-        for (String row : possibleCombinations.combinationsTable) {
-            System.out.println(row);
-        }
-
-        // Generate and display batches
-        System.out.println("\nGENERATING BATCHES:\n");
-        Knapsack_Algorithm.findAndDeliverBatches(maxWeight);
-
-        // Create batches for sorting
-        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
-        List<List<Product>> batches = knapsack.knapsackBatchSelection();
-
-        // Initialize customer search
-        StringMatching stringMatching = new StringMatching();
-
-        // Display sorting and customer search menu
-        sortAndSearchMenu(batches, scanner, stringMatching);
-
-        scanner.close();
-    }
 
     public static void sortAndSearchMenu(List<List<Product>> batches, Scanner scanner, StringMatching stringMatching) {
         boolean running = true;
@@ -51,7 +19,7 @@ public class ProductSorter {
             System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume newline
+            scanner.nextLine(); // Consume newline
 
             switch (choice) {
                 case 1:
@@ -71,10 +39,9 @@ public class ProductSorter {
                     displayBatches(batches);
                     break;
                 case 5:
-                    // Customer Search
                     System.out.print("\nEnter Customer Name: ");
                     String customerName = scanner.nextLine();
-                    stringMatching.findCustomer(customerName);
+                    stringMatching.findCustomer(customerName); // Call existing StringMatching
                     break;
                 case 6:
                     System.out.println("\nExiting program.");
@@ -92,28 +59,24 @@ public class ProductSorter {
             String name2 = batch2.get(0).product_Name;
             return name1.compareToIgnoreCase(name2);
         });
-        System.out.println("\nBatches sorted by Product Name (Alphabetically).");
     }
 
     public static void sortByTotalQuantity(List<List<Product>> batches) {
         Collections.sort(batches, Comparator.comparingInt(batch ->
                 batch.stream().mapToInt(p -> p.quantity).sum()));
-        System.out.println("\nBatches sorted by Total Quantity.");
     }
 
     public static void sortByTotalWeight(List<List<Product>> batches) {
         Collections.sort(batches, Comparator.comparingInt(batch ->
                 batch.stream().mapToInt(p -> p.product_Weight).sum()));
-        System.out.println("\nBatches sorted by Total Weight.");
     }
 
     public static void sortByTotalValue(List<List<Product>> batches) {
         batches.sort((batch1, batch2) -> {
             int value1 = batch1.stream().mapToInt(p -> p.product_Value).sum();
             int value2 = batch2.stream().mapToInt(p -> p.product_Value).sum();
-            return Integer.compare(value2, value1); // Sort by descending value
+            return Integer.compare(value2, value1); // Descending order
         });
-        System.out.println("\nBatches sorted by Total Value.");
     }
 
     public static void displayBatches(List<List<Product>> batches) {
