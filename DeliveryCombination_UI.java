@@ -1,8 +1,7 @@
-package hexpress_algorithm;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeliveryCombination_UI {
@@ -10,7 +9,12 @@ public class DeliveryCombination_UI {
     private JFrame frame;
     private JTextArea outputArea;
     private DeliveryCombination deliveryCombination;
+    private List<List<Product>> allBatches; // Store batches
+    private List<String> allBatchLocations; // Store locations for each batch
     private int maxWeight;
+    private JButton proceedToMapButton;
+    private ImageIcon backgroundGif;
+
 
     public DeliveryCombination_UI() {
         initializeUI();
@@ -21,12 +25,10 @@ public class DeliveryCombination_UI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Icon
         ImageIcon icon = new ImageIcon("kikilogo.png");
         frame.setIconImage(icon.getImage());
 
-        // Background image
-        ImageIcon backgroundIcon = new ImageIcon("kiki sky.jpg");
+        ImageIcon backgroundIcon = new ImageIcon("C:\\Users\\Sakina Abad\\IdeaProjects\\HEXPRESS2.0\\src\\clouds.gif");
 
         JPanel backgroundPanel = new JPanel() {
             Image backgroundImage = backgroundIcon.getImage();
@@ -39,7 +41,6 @@ public class DeliveryCombination_UI {
         };
         backgroundPanel.setLayout(null);
 
-        // Panel for delivery controls
         JPanel deliveryPanel = new JPanel(null);
         deliveryPanel.setBackground(new Color(245, 222, 179, 230));
 
@@ -51,14 +52,12 @@ public class DeliveryCombination_UI {
         deliveryPanel.setBounds(x, y, panelWidth, panelHeight);
         backgroundPanel.add(deliveryPanel);
 
-        // Title label
         JLabel title = new JLabel("Kiki's Delivery Service - Batches", JLabel.CENTER);
         title.setFont(new Font("Serif", Font.BOLD | Font.ITALIC, 36));
         title.setForeground(new Color(104, 2, 2));
         title.setBounds(50, 20, 1100, 50);
         deliveryPanel.add(title);
 
-        // Max weight input
         JLabel weightLabel = new JLabel("Enter Max Weight (kg):");
         weightLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
         weightLabel.setBounds(50, 90, 300, 30);
@@ -69,12 +68,10 @@ public class DeliveryCombination_UI {
         weightField.setBounds(350, 90, 200, 30);
         deliveryPanel.add(weightField);
 
-        // "Find & Deliver Batches" Button
         JButton findDeliverButton = createStyledButton("Find & Deliver Batches");
         findDeliverButton.setBounds(600, 90, 400, 50);
         deliveryPanel.add(findDeliverButton);
 
-        // Output Area (TextArea inside JScrollPane)
         outputArea = new JTextArea();
         outputArea.setEditable(false);
         outputArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
@@ -85,35 +82,41 @@ public class DeliveryCombination_UI {
         scrollPane.setBounds(50, 160, 1100, 400);
         deliveryPanel.add(scrollPane);
 
-        // "Deliver Next Combination" Button
         JButton deliverNextButton = createStyledButton("Deliver Next Combination");
-        deliverNextButton.setBounds(450, 580, 300, 60);
+        deliverNextButton.setBounds(410, 580, 340, 60);
         deliverNextButton.setEnabled(false);
         deliveryPanel.add(deliverNextButton);
 
-        // Find & Deliver batches action
+        proceedToMapButton = createStyledButton("Proceed to Map");
+        proceedToMapButton.setBounds(800, 580, 300, 60);
+        proceedToMapButton.setEnabled(false);
+        proceedToMapButton.setVisible(false);
+        deliveryPanel.add(proceedToMapButton);
+
         findDeliverButton.addActionListener((ActionEvent e) -> {
             try {
                 maxWeight = Integer.parseInt(weightField.getText().trim());
-
-                // Run the knapsack batch selection process
                 outputArea.setText("");
                 findAndDisplayBatches(maxWeight);
-
                 deliverNextButton.setEnabled(true);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Please enter a valid max weight.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
             }
         });
 
-        // Deliver next combination action
         deliverNextButton.addActionListener((ActionEvent e) -> {
             if (deliveryCombination != null && !deliveryCombination.isEmpty()) {
                 deliverNextCombination();
             } else {
                 outputArea.append("\nAll batches delivered!\n");
                 deliverNextButton.setEnabled(false);
+                proceedToMapButton.setEnabled(true);
+                proceedToMapButton.setVisible(true);
             }
+        });
+
+        proceedToMapButton.addActionListener((ActionEvent e) -> {
+            openMapPage();
         });
 
         frame.setContentPane(backgroundPanel);
@@ -126,28 +129,26 @@ public class DeliveryCombination_UI {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
                 g2.setColor(new Color(200, 180, 150));
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
-
                 super.paintComponent(g2);
                 g2.dispose();
             }
         };
-
         button.setFont(new Font("Comic Sans MS", Font.BOLD, 26));
         button.setForeground(Color.BLACK);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setOpaque(false);
-
         return button;
     }
 
     private void findAndDisplayBatches(int maxWeight) {
-        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
-        List<List<Product>> allBatches = knapsack.knapsackBatchSelection();
+        KnapsackSolver knapsack = new KnapsackSolver(maxWeight);
+        allBatches = knapsack.knapsackBatchSelection(); // Store batches
+        allBatchLocations = new ArrayList<>(); // Initialize list to store locations
+        System.out.println("Total batches from KnapsackSolver: " + allBatches.size());
 
         deliveryCombination = new DeliveryCombination();
 
@@ -160,25 +161,25 @@ public class DeliveryCombination_UI {
             }
 
             int totalWeight = 0, totalValue = 0, totalQuantity = 0;
-            String deliveryLocation = "Multiple Locations";
             List<String> batchLocations = new java.util.ArrayList<>();
             StringBuilder productNames = new StringBuilder();
 
+            System.out.println("Batch " + batchNumber + " contains " + batch.size() + " products:");
             for (Product p : batch) {
                 totalWeight += p.product_Weight;
                 totalValue += p.product_Value;
                 totalQuantity += p.quantity;
-                if (!batchLocations.contains(p.location)) {
-                    batchLocations.add(p.location);
+                if (!batchLocations.contains(p.location.trim())) {
+                    batchLocations.add(p.location.trim());
                 }
                 productNames.append(p.product_Name).append(", ");
+                System.out.println("  Product: " + p.product_Name + ", Location: " + p.location);
             }
 
-            if (batchLocations.size() == 1) {
-                deliveryLocation = batchLocations.get(0);
-            }
+            String deliveryLocation = String.join(", ", batchLocations);
+            allBatchLocations.add(deliveryLocation); // Store the locations for this batch
+            System.out.println("Batch " + batchNumber + " - Combined locations: " + deliveryLocation);
 
-            // Add to delivery queue
             deliveryCombination.addCombination(batch, totalWeight, totalValue, deliveryLocation);
 
             outputArea.append("\nBatch " + batchNumber + " ready for delivery!\n");
@@ -186,7 +187,7 @@ public class DeliveryCombination_UI {
             outputArea.append("Total Quantity: " + totalQuantity + "\n");
             outputArea.append("Total Weight: " + totalWeight + " kg\n");
             outputArea.append("Total Value: " + totalValue + "\n");
-            outputArea.append("Locations: " + String.join(", ", batchLocations) + "\n");
+            outputArea.append("Locations: " + deliveryLocation + "\n");
             outputArea.append("------------------------------------------------------\n");
 
             batchNumber++;
@@ -217,18 +218,26 @@ public class DeliveryCombination_UI {
             productNames.setLength(productNames.length() - 2);
         }
 
+        // Calculate the total distance using TSPSolver
+        int totalDistance = TSPSolver.runTSP(java.util.Arrays.asList(bestCombo.location.split(", ")));
+
         outputArea.append("\nDelivered to: " + bestCombo.location + "\n");
         outputArea.append("Products: " + productNames.toString() + "\n");
         outputArea.append("Total Weight: " + bestCombo.totalWeight + " kg\n");
         outputArea.append("Total Value: " + bestCombo.totalValue + "\n");
+        outputArea.append("Total Distance: " + totalDistance + " km\n"); // Display the total distance
         outputArea.append("------------------------------------------------------\n");
-
-        // Run TSP Solver for locations (optional)
-        TSP_Solver.runTSP(java.util.Arrays.asList(bestCombo.location));
 
         if (deliveryCombination.isEmpty()) {
             outputArea.append("\nAll batches delivered!\n");
+            proceedToMapButton.setEnabled(true);
+            proceedToMapButton.setVisible(true);
         }
+    }
+
+    private void openMapPage() {
+        new MapUI(deliveryCombination, allBatchLocations); // Pass both deliveryCombination and allBatchLocations
+        frame.dispose();
     }
 
     public static void main(String[] args) {
