@@ -1,4 +1,3 @@
-package hexpress_algorithm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,12 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Knapsack_Algorithm {
+public class KnapsackSolver {
 
     private int maxWeight;
-    private List<Product> remainingProducts;
+    public List<Product> remainingProducts;
 
-    public Knapsack_Algorithm(int maxWeight) {
+    public KnapsackSolver(int maxWeight) {
         this.maxWeight = maxWeight;
         this.remainingProducts = new ArrayList<>(Arrays.asList(Product.product));
     }
@@ -37,7 +36,7 @@ public class Knapsack_Algorithm {
         return allBatches;
     }
 
-    private List<List<Product>> generateCombinations(List<Product> products) {
+    public List<List<Product>> generateCombinations(List<Product> products) {
         List<List<Product>> combinations = new ArrayList<>();
         int n = products.size();
 
@@ -135,7 +134,7 @@ public class Knapsack_Algorithm {
 
     // ✅ STATIC WRAPPER METHOD (You can call this from Main/UI)
     public static void findAndDeliverBatches(int maxWeight) {
-        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
+        KnapsackSolver knapsack = new KnapsackSolver(maxWeight);
         List<List<Product>> allBatches = knapsack.knapsackBatchSelection();
 
         int batchNumber = 1;
@@ -170,7 +169,7 @@ public class Knapsack_Algorithm {
             System.out.println("Locations for Delivery: " + String.join(", ", batchLocations) + "\n");
 
             // Example: call TSP_Solver to optimize delivery routes
-            TSP_Solver.runTSP(new ArrayList<>(batchLocations));
+            TSPSolver.runTSP(new ArrayList<>(batchLocations));
 
             System.out.println("\nKiki is back in Koriko City and ready to reload for the next batch!\n");
 
@@ -191,7 +190,7 @@ public class Knapsack_Algorithm {
 
     // ✅ STATIC METHOD FOR UI TO GET BATCH COMBINATIONS (NO CONSOLE OUTPUT)
     public static KnapsackResult findCombinations(int maxWeight) {
-        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
+        KnapsackSolver knapsack = new KnapsackSolver(maxWeight);
         List<List<Product>> allBatches = knapsack.knapsackBatchSelection();
 
         List<String> table = new ArrayList<>();
@@ -226,7 +225,7 @@ public class Knapsack_Algorithm {
 
     // ✅ STATIC METHOD TO GET ALL POSSIBLE OUTCOMES (COMBINATIONS)
     public static KnapsackResult getAllPossibleOutcomes(int maxWeight) {
-        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
+        KnapsackSolver knapsack = new KnapsackSolver(maxWeight);
         List<List<Product>> combinations = knapsack.generateCombinations(knapsack.remainingProducts);
 
         List<String> table = new ArrayList<>();
