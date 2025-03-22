@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductSorterSortingUI {
+public class ProductSorterSortingUI extends JFrame {
     private JFrame frame;
     private List<List<Product>> batches;
     private DefaultTableModel tableModel;
@@ -39,7 +39,7 @@ public class ProductSorterSortingUI {
 
     private JPanel createBackgroundPanel() {
         JPanel panel = new JPanel(null) {
-            Image backgroundImage = loadImage("C:\\Users\\DELL\\eclipse-workspace\\HEXPRESS\\src\\clouds.gif", "Background");
+            Image backgroundImage = loadImage("C:\\Users\\Sakina Abad\\IdeaProjects\\HEXPRESSFINAL\\src\\clouds.gif", "Background");
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -73,7 +73,7 @@ public class ProductSorterSortingUI {
     }
 
     private void setupTable(JPanel panel) {
-        String[] columnNames = {"Batch", "Product Names", "Qty", "Weight", "Value"};
+        String[] columnNames = {"#", "Product Names", "Qty", "Weight", "Value"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -160,45 +160,36 @@ public class ProductSorterSortingUI {
         panel.add(exitButton);
 
         sortNameButton.addActionListener(e -> {
-            ProductSorter.sortByProductName(batches);
+            ProductSorterBatches.sortByProductName(batches);
             populateTableWithBatches(batches);
             displaySortedBatches("Product Name (Alphabetically)", batches);
         });
 
         sortQtyButton.addActionListener(e -> {
-            ProductSorter.sortByTotalQuantity(batches);
+            ProductSorterBatches.sortByTotalQuantity(batches);
             populateTableWithBatches(batches);
             displaySortedBatches("Total Quantity", batches);
         });
 
         sortWeightButton.addActionListener(e -> {
-            ProductSorter.sortByTotalWeight(batches);
+            ProductSorterBatches.sortByTotalWeight(batches);
             populateTableWithBatches(batches);
             displaySortedBatches("Total Weight", batches);
         });
 
         sortValueButton.addActionListener(e -> {
-            ProductSorter.sortByTotalValue(batches);
+            ProductSorterBatches.sortByTotalValue(batches);
             populateTableWithBatches(batches);
             displaySortedBatches("Total Value", batches);
         });
 
-        // Updated to use existing StringMatching class
+        // Modified action listener for "SEARCH CUSTOMER" button
         searchButton.addActionListener(e -> {
-            // Create a new frame for StringMatchingGUI
-            JFrame searchFrame = new JFrame("Customer Search");
-            searchFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            searchFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            searchFrame.setIconImage(loadImage("kikilogo.png", "Icon"));
-
-            // Initialize StringMatchingGUI with the new frame
-            StringMatchingGUI stringMatchingGUI = new StringMatchingGUI(searchFrame);
-
-            // Set visible after initialization
-            searchFrame.setVisible(true);
-
-            // Update output area to indicate redirection
-            outputArea.setText("Redirected to customer search interface.");
+            // Open StringMatchingGUI and close ProductSorterSortingUI
+            SwingUtilities.invokeLater(() -> {
+                new StringMatchingGUI().setVisible(true);
+            });
+            frame.dispose(); // Close the current ProductSorterSortingUI window
         });
 
         backButton.addActionListener(e -> goBack());
