@@ -3,7 +3,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
-public class ProductSorter {
+public class ProductSorterBatches {
 
     public static void sortAndSearchMenu(List<List<Product>> batches, Scanner scanner, StringMatching stringMatching) {
         boolean running = true;
