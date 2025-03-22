@@ -157,11 +157,10 @@ public class TSPui {
 
     // New method to open SortingGui with combinations
     private void openSortingGui() {
-        // Assume combinations are generated or available from DeliveryCombination or another source
-        KnapsackSolver solver = new KnapsackSolver(20); // Example max weight (adjust as needed)
+        KnapsackSolver solver = new KnapsackSolver(15); // will be overwritten later
         List<List<Product>> combinations = solver.generateCombinations(solver.remainingProducts);
-        SortingGui.setCombinations(combinations); // Set the combinations before opening
-        SortingGui.open(); // Use the static open method
+        SortingGui.setCombinations(combinations); 
+        SortingGui.open(); 
     }
 
     private void drawCityMarkers(Graphics g) {
@@ -211,7 +210,6 @@ public class TSPui {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(3));
 
-        // Only draw the current batch's routes
         if (currentBatchIndex < allCoordinates.size()) {
             List<Point> coordinates = allCoordinates.get(currentBatchIndex);
             for (int i = 0; i < coordinates.size() - 1; i++) {
