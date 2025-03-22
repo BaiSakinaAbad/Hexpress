@@ -1,4 +1,3 @@
-package DAA;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -26,7 +25,7 @@ public class ExitGui {
         int screenWidth = screenSize.width;
         int screenHeight = screenSize.height;
 
-        ImageIcon gifIcon = new ImageIcon("C:/Users/DELL/OneDrive/Documents/DAA/DAA midterm Proj/Videos/0320-ezgif.com-animated-gif-maker.gif");
+        ImageIcon gifIcon = new ImageIcon("C:\\Users\\Sakina Abad\\IdeaProjects\\HEXPRESS2.0\\src\\exitbackground.gif");
         Image gifImage = gifIcon.getImage().getScaledInstance(screenWidth, screenHeight, Image.SCALE_DEFAULT);
         JLabel background = new JLabel(new ImageIcon(gifImage));
         background.setLayout(new BorderLayout());
