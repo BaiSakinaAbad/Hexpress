@@ -27,7 +27,7 @@ public class ProductSorterBatchUI {
         frame.setIconImage(icon.getImage());
 
         JPanel backgroundPanel = new JPanel(null) {
-            Image backgroundImage = new ImageIcon("C:\\Users\\DELL\\eclipse-workspace\\HEXPRESS\\src\\clouds.gif").getImage();
+            Image backgroundImage = new ImageIcon("C:\\Users\\Sakina Abad\\IdeaProjects\\HEXPRESSFINAL\\src\\clouds.gif").getImage();
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -190,7 +190,7 @@ public class ProductSorterBatchUI {
     }
 
     private void generateBatchSets() {
-        Knapsack_Algorithm knapsack = new Knapsack_Algorithm(maxWeight);
+        KnapsackSolver knapsack = new KnapsackSolver(maxWeight);
         List<List<Product>> batches = knapsack.knapsackBatchSelection();
         allBatchSets.add(batches);
     }
