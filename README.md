@@ -8,7 +8,7 @@ Our program combines the beautiful aesthetic of the world of Kiki's Delivery Ser
 + Begin by downloading and extracting the given zip folder containing the program files
 + Find and Run the **WelcomeUI** class. <br>
 
-//image of start screen
+![Hexpress Start Screen](https://github.com/BaiSakinaAbad/Hexpress/blob/main/INTRO%20HEXPRESS.png)
 //image of kiki intro
 
 ## Knapsack Algorithm
