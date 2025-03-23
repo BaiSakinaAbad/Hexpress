@@ -1,15 +1,18 @@
-# Hexpress
-Midterm Project for for Design and Analysis of Algorithm
-&emsp; &ensp; 
-Hexpress is a delivery service inspired by the Studio Ghibli Film Kiki's Delivery Service.
-Our program combines the beautiful aesthetic of the world of Kiki's Delivery Service with the power of Computer Science to create this project. <br>
+<h1 align="center">HEXPRESS</h1> 
+
+![Hexpress Start Screen](https://github.com/BaiSakinaAbad/Hexpress/blob/main/INTRO%20HEXPRESS.png)  
+**Midterm Project for Design and Analysis of Algorithm**    
+Hexpress is a delivery service inspired by the Studio Ghibli film *Kiki's Delivery Service*.  
+Our program combines the beautiful aesthetic of the world of *Kiki's Delivery Service* with the power of Computer Science to create this project.  
+<be>
 
 ## How to Install the Program?
 + Begin by downloading and extracting the given zip folder containing the program files
-+ Find and Run the **WelcomeUI** class. <br>
++ Find and Run the **WelcomeUI** class.
++ You might need to edit the png and gif path to load the graphics properly. It's simple, right click the file and click "Copy path/Reference" and copy the absolute path. Paste it to their appropriate line.<br>
 
-![Hexpress Start Screen](https://github.com/BaiSakinaAbad/Hexpress/blob/main/INTRO%20HEXPRESS.png)
-//image of kiki intro
+![Hexpress Start Screen](https://github.com/BaiSakinaAbad/Hexpress/blob/main/kikiintro.gif)
+
 
 ## Knapsack Algorithm
 + The program will firstly display all of the pre defined product list that will be passed to the Knapsack Algorithm.
