@@ -1,48 +1,23 @@
-<h1 align="center">HEXPRESS</h1> 
+# HEXPRESS: Kiki's Delivery Service Adventure
 
-![Hexpress Start Screen](https://github.com/BaiSakinaAbad/Hexpress/blob/main/INTRO%20HEXPRESS.png)  
-**Midterm Project for Design and Analysis of Algorithm**    
-Hexpress is a delivery service inspired by the Studio Ghibli film *Kiki's Delivery Service*.  
-Our program combines the beautiful aesthetic of the world of *Kiki's Delivery Service* with the power of Computer Science to create this project.  
-<be>
+**HEXPRESS** is a web-based educational application inspired by Kiki's Delivery Service. 
+The application is designed to demonstrate computer science algorithms in a fun, interactive way. 
+Users assist Kiki in sorting customers, selecting items for delivery, and finding the best route for her deliveries. 
 
-## How to Install the Program?
-+ Begin by downloading and extracting the given zip folder containing the program files
-+ Find and Run the **WelcomeUI** class.
-+ You might need to edit the png and gif path to load the graphics properly. It's simple, right click the file and click "Copy path/Reference" and copy the absolute path. Paste it to their appropriate line.<br>
+> **Note:** This project is for educational purposes only and serves as a demonstration of algorithmic concepts.
 
-![Hexpress Start Screen](https://github.com/BaiSakinaAbad/Hexpress/blob/main/kikiintro.gif)
+## Algorithms Used
 
-
-## Knapsack Algorithm
-+ The program will firstly display all of the pre defined product list that will be passed to the Knapsack Algorithm.
-+ The User will be prompt to enter the maximum capacity of the basket that Kiki will hold.
-+ The Knapsack Algorithm will calculate all the possible product combination and will choose the combination with the highest value to be delivered first.
-
-## Sorting Algorithm
-+ Based on the result of the Knapsack algorithm, which evaluates all possible combinations of products, this part of the program presents various options to sort the list, such as:
-  + **By name**
-  + **By value**
-  + **By weight**
-
-## Traveling Salesman Problem Algorithm(TSP)
-+ The program will display the map that is used
-+ The TSP delivery routes based on the best combination chosen by the Knapsack will run through a simulation
-+ The simulation will display the routes that Kiki will follow
-
-## String Matching Algorithm
-+ By using the cutomer name, location and other values in the product table, the program can retrieve the right customer name, location and their order by using string matching
-+ This is implemented using a search based UI design
-
-## Exit
-+ Once the user is satistfied with the output of the program, the exit button will display the programmer's names
-
+- **String Matching (Naive Algorithm):** Used for finding and filtering customer names based on user input.
+- **Merge Sort:** Implemented to alphabetically sort the customer list efficiently.
+- **0/1 Knapsack Problem (Dynamic Programming):** Applied to optimize the payload for Kiki's broomstick, balancing the weight of the items to maximize delivery value.
+- **Traveling Salesperson Problem (TSP):** Used to determine the shortest possible route to visit all selected delivery locations and return to the starting point.
 
 ## Contributors (2BSCS-2)
-Programmers                  | Github Profile
-:---:                        | :---:
-Abad, Bai Sakina             | https://github.com/BaiSakinaAbad
-Baguio, Precy S.             | https://github.com/pwecii
-De Mesa, Saira Sofia S.      | https://github.com/sairarat
-Rodrigo, Julia T.            | https://github.com/engr-julia
 
+| Programmers | Github Profile |
+| :---: | :---: |
+| Abad, Bai Sakina | [https://github.com/BaiSakinaAbad](https://github.com/BaiSakinaAbad) |
+| Baguio, Precy S. | [https://github.com/pwecii](https://github.com/pwecii) |
+| De Mesa, Saira Sofia S. | [https://github.com/sairarat](https://github.com/sairarat) |
+| Rodrigo, Julia T. | [https://github.com/engr-julia](https://github.com/engr-julia) |
